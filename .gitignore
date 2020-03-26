@@ -16,5 +16,6 @@
 *.vcf
 *.xml
 *.xlsx
+.idea/
 
 # End of https://www.gitignore.io/api/data
