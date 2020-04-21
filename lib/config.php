@@ -7,14 +7,13 @@
  */
 
 $DB_HOST="localhost";
-$DB_NAME="Etienne";
+$DB_NAME="rapprochement";
 $DB_USER="etienne";
-$DB_PASS="etienne";
+$DB_PASS="formule18";
 
 $DATA_DIR="./data";
 $ARCHIVE_DIR="./archives";
 $WORKING_DIR="./working";
-
 
 //Ouverture de la connection mysql
 try {

@@ -22,12 +22,14 @@ if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $WORKING_DIR . "/" .
 
     $nb_rows=0;
     while ($row = fgetcsv($file, 1024, ";")) {
-        //echo($row[1]);
+//        print_r($row);
+//        error_log(print_r($row[0],true));
         $row = array_map("convert",$row);
-        list($jour, $mois, $annee) = explode("/", $row[1]);
+        list($jour, $mois, $annee) = explode("/", $row[0]);
+//        echo($jour."---".$mois."---".$annee);
         if (checkdate($mois, $jour, $annee)) {
 
-            $sql = "INSERT INTO Etienne.secu (date_paiement,num_lot,num_facture,Organisme,Patient,ss_num,nature_acte,date_acte,montant,nom_fichier) VALUES (";
+            $sql = "INSERT INTO $DB_NAME.secu (date_paiement,num_lot,num_facture,Organisme,Patient,ss_num,nature_acte,date_acte,montant,nom_fichier) VALUES (";
             for ($i = 0; $i < count($row); $i++) {
                 switch ($i) {
                     case 0:
@@ -49,7 +51,7 @@ if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $WORKING_DIR . "/" .
                     $sql.=",";
             }
             $sql.=",'".$filename."');";
-            //echo $sql;
+//            echo $sql;
             $statement = $pdo->prepare($sql);
             if($statement->execute())
             {

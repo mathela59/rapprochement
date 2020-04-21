@@ -23,9 +23,12 @@ if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $WORKING_DIR . "/" .
 
     $nb_rows=0;
     while ($row = fgetcsv($file, 1024, ";")) {
+//        error_log("Verification de la ligne : ".print_r($row,true));
         $row = array_map("convert",$row);
         list($jour, $mois, $annee) = explode("/", $row[2]);
+//        error_log("Verification de la date : ".$jour."--".$mois."--".$annee);
         if (checkdate($mois, $jour, $annee)) {
+//            error_log("Generation du SQL");
             $sql = "INSERT INTO compta(numero,Val,DateFacture,NumFacture,LibelleFacture,Patient,
 Payeur,Mode,DatePaiement,Encaisse,impaye,MontantPaye,MontantFacture,Praticien,Etablissement,
 Cotations,LibelleActe,SsPatient,TypePrestation,MontantRecette,MontantReglement,TropPaye,
@@ -33,13 +36,23 @@ BanqueCabinet,BanquePayeur,DetailPrestation,CategorieActe,NumHospitalisation,nom
 ";
             for ($i = 0; $i < count($row); $i++) {
                 switch ($i) {
+                    case 1:
+                        $sql.=0;
+                        break;
                     case 0:
                     case 3:
                         $sql.=intval($row[$i]);
                         break;
                     case 2:
                     case 8:
-                        $sql.="'".convert_date($row[$i])."'";
+                        if($row[$i]!="") {
+                            error_log("prout" . $row[$i] . "----" . $i . "###");
+                            $sql .= "'" . convert_date($row[$i]) . "'";
+                        }
+                        else
+                        {
+                            $sql.="NULL";
+                        }
                         break;
                     case 9:
                     case 10:
@@ -50,6 +63,10 @@ BanqueCabinet,BanquePayeur,DetailPrestation,CategorieActe,NumHospitalisation,nom
                     case 21:
                         $sql.=convert_money($row[$i]);
                         break;
+                    case 27:
+                        if($row[$i]=='' || $row[$i]==null)
+                            $sql.="NULL";
+                        break;
                     default:
                         $sql.="'".$row[$i]."'";
                         break;
@@ -58,7 +75,7 @@ BanqueCabinet,BanquePayeur,DetailPrestation,CategorieActe,NumHospitalisation,nom
                         $sql.=",";
             }
             $sql.=",'".$filename."');";
-            //echo $sql;
+//            echo $sql."<hr/>";
             $statement = $pdo->prepare($sql);
             if($statement->execute())
             {

@@ -12,7 +12,9 @@ function convert( $str ) {
 
 function convert_date($date)
 {
+    error_log("Date en entree : ".$date);
     $tab = explode("/",$date);
+    error_log("Tableau en sortie : ".print_r($tab,true));
     return $tab[2]."-".$tab[1]."-".$tab[0];
 }
 
