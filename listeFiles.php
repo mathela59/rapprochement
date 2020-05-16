@@ -7,8 +7,9 @@
  */
 require_once("lib/config.php");
 
-$compta = $pdo->query('SELECT DISTINCT(nom_fichier) FROM compta')->execute();
-$secu = $pdo->query('SELECT DISTINCT(nom_fichier) FROM secu')->execute();
+$compta = $pdo->query('SELECT DISTINCT(nom_fichier) FROM compta');
+
+$secu = $pdo->query('SELECT DISTINCT(nom_fichier) FROM secu');
 
 
 ?>
@@ -30,7 +31,17 @@ $secu = $pdo->query('SELECT DISTINCT(nom_fichier) FROM secu')->execute();
     <tr>
         <td>
             <ul>            <?php
-                while ($row = $compta->fetch(PDO::FETCH_ASSOC)) {
+                while ($row = $compta->fetch(PDO::FETCH_BOTH)) {
+                    ?>
+                    <li><?php echo $row[0]; ?></li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </td>
+        <td>
+            <ul>            <?php
+                while ($row = $secu->fetch(PDO::FETCH_BOTH)) {
                     ?>
                     <li><?php echo $row[0]; ?></li>
                     <?php
@@ -38,17 +49,7 @@ $secu = $pdo->query('SELECT DISTINCT(nom_fichier) FROM secu')->execute();
 
                 ?>
             </ul>
-        </td>
-        <td><
-            <ul>            <?php
-                while ($row = $secu->fetch(PDO::FETCH_ASSOC)) {
-                    ?>
-                    <li><?php echo $row[0]; ?></li>
-                    <?php
-                }
-
-                ?>
-            </ul>/td>
+            </td>
     </tr>
     </tbody>
 </table>
